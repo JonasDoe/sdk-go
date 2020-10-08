@@ -22,6 +22,8 @@ import (
 const (
 	// DefaultShutdownTimeout defines the default timeout given to the http.Server when calling Shutdown.
 	DefaultShutdownTimeout = time.Minute * 1
+	// DefaultReadWriteTimeout defines the default read and write timeout given to the http.Server when handling requests.
+	DefaultReadWriteTimeout = time.Second * 30
 )
 
 type msgErr struct {
@@ -64,6 +66,9 @@ type Protocol struct {
 	// ShutdownTimeout defines the timeout given to the http.Server when calling Shutdown.
 	// If nil, DefaultShutdownTimeout is used.
 	ShutdownTimeout time.Duration
+	// ReadWriteTimeout defines the timeout for reading an incoming a request or writing to an outbound response.
+	// If nil, DefaultReadWriteTimeout is used.
+	ReadWriteTimeout time.Duration
 
 	// Port is the port configured to bind the receiver to. Defaults to 8080.
 	// If you want to know the effective port you're listening to, use GetListeningPort()
@@ -105,6 +110,10 @@ func New(opts ...Option) (*Protocol, error) {
 
 	if p.ShutdownTimeout == 0 {
 		p.ShutdownTimeout = DefaultShutdownTimeout
+	}
+
+	if p.ReadWriteTimeout == 0 {
+		p.ReadWriteTimeout = DefaultReadWriteTimeout
 	}
 
 	if p.isRetriableFunc == nil {

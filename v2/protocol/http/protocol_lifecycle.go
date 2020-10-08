@@ -41,6 +41,8 @@ func (p *Protocol) OpenInbound(ctx context.Context) error {
 			Handler:        attachMiddleware(p.Handler, p.middleware),
 			FormatSpanName: formatSpanName,
 		},
+		ReadTimeout:  p.ReadWriteTimeout,
+		WriteTimeout: p.ReadWriteTimeout,
 	}
 
 	// Shutdown

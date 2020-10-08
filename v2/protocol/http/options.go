@@ -78,6 +78,17 @@ func WithShutdownTimeout(timeout time.Duration) Option {
 	}
 }
 
+// WithReadWriteTimeout sets the read and write timeouts for processing a request and sending a response.
+func WithReadWriteTimeout(timeout time.Duration) Option {
+	return func(p *Protocol) error {
+		if p == nil {
+			return fmt.Errorf("http read and write timeout option can not set nil protocol")
+		}
+		p.ReadWriteTimeout = timeout
+		return nil
+	}
+}
+
 func checkListen(p *Protocol, prefix string) error {
 	switch {
 	case p.listener.Load() != nil:
